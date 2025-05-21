@@ -1,0 +1,227 @@
+name: Build and Push Microservices to ECR
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - stage
+          - main
+      full_build:
+        description: 'Build all services'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+
+jobs:
+
+  detect-changes-in-service:
+    runs-on: ubuntu-latest
+    outputs:
+      services_changed: ${{ steps.set-services.outputs.services_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: filter
+        if: ${{ github.event.inputs.full_build != 'true' }}
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            adservice:
+              - 'src/adservice/**'
+            cartservice:
+              - 'src/cartservice/src/**'
+            checkoutservice:
+              - 'src/checkoutservice/**'
+            currencyservice:
+              - 'src/currencyservice/**'
+            emailservice:
+              - 'src/emailservice/**'
+            frontend:
+              - 'src/frontend/**'
+            loadgenerator:
+              - 'src/loadgenerator/**'
+            paymentservice:
+              - 'src/paymentservice/**'
+            productcatalogservice:
+              - 'src/productcatalogservice/**'
+            recommendationservice:
+              - 'src/recommendationservice/**'
+            shippingservice:
+              - 'src/shippingservice/**'
+            shoppingassistantservice:
+              - 'src/shoppingassistantservice/**'
+
+      - name: Debug filter outputs
+        run: |
+          echo "adservice: ${{ steps.filter.outputs.adservice }}"
+          echo "cartservice: ${{ steps.filter.outputs.cartservice }}"
+          echo "checkoutservice: ${{ steps.filter.outputs.checkoutservice }}"
+          echo "currencyservice: ${{ steps.filter.outputs.currencyservice }}"
+          echo "emailservice: ${{ steps.filter.outputs.emailservice }}"
+          echo "frontend: ${{ steps.filter.outputs.frontend }}"
+          echo "loadgenerator: ${{ steps.filter.outputs.loadgenerator }}"
+          echo "paymentservice: ${{ steps.filter.outputs.paymentservice }}"
+          echo "productcatalogservice: ${{ steps.filter.outputs.productcatalogservice }}"
+          echo "recommendationservice: ${{ steps.filter.outputs.recommendationservice }}"
+          echo "shippingservice: ${{ steps.filter.outputs.shippingservice }}"
+          echo "shoppingassistantservice: ${{ steps.filter.outputs.shoppingassistantservice }}"
+
+      - name: Set changed services output
+        id: set-services
+        shell: python
+        run: |
+          import os
+          import json
+
+          all_services = [
+              "adservice", "cartservice", "checkoutservice", "currencyservice", "emailservice",
+              "frontend", "loadgenerator", "paymentservice", "productcatalogservice",
+              "recommendationservice", "shippingservice", "shoppingassistantservice"
+          ]
+
+          full_build = "${{ github.event.inputs.full_build }}".strip().lower() == "true"
+
+          if full_build:
+              changed = all_services
+          else:
+              services = {
+                  "adservice": "${{ steps.filter.outputs.adservice }}",
+                  "cartservice": "${{ steps.filter.outputs.cartservice }}",
+                  "checkoutservice": "${{ steps.filter.outputs.checkoutservice }}",
+                  "currencyservice": "${{ steps.filter.outputs.currencyservice }}",
+                  "emailservice": "${{ steps.filter.outputs.emailservice }}",
+                  "frontend": "${{ steps.filter.outputs.frontend }}",
+                  "loadgenerator": "${{ steps.filter.outputs.loadgenerator }}",
+                  "paymentservice": "${{ steps.filter.outputs.paymentservice }}",
+                  "productcatalogservice": "${{ steps.filter.outputs.productcatalogservice }}",
+                  "recommendationservice": "${{ steps.filter.outputs.recommendationservice }}",
+                  "shippingservice": "${{ steps.filter.outputs.shippingservice }}",
+                  "shoppingassistantservice": "${{ steps.filter.outputs.shoppingassistantservice }}"
+              }
+              changed = [svc for svc, flag in services.items() if flag.strip().lower() == "true"]
+
+          changed_json = json.dumps(changed)
+          print(f"Changed services: {changed_json}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              print(f"services_changed={changed_json}", file=fh)
+
+    
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    needs: detect-changes-in-service
+    if: ${{needs.detect-changes-in-service.outputs.services_changed != '[]' }}
+    strategy:
+        matrix:
+            service: ${{ fromJson(needs.detect-changes-in-service.outputs.services_changed) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Debug matrix input
+        run: echo "${{ fromJson(needs.detect-changes-in-service.outputs.services_changed) }}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Set short SHA environment variable
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Build, Tag image
+        run: |
+          SERVICE=${{ matrix.service }}
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          IMAGE_TAG=${{ env.SHORT_SHA }}
+          ECR_REPO="${{ env.ECR_REGISTRY }}/${SERVICE}"
+
+          DOCKER_CONTEXT="./src/$SERVICE"
+          DOCKERFILE_PATH="$DOCKER_CONTEXT/Dockerfile"
+          if [ "$SERVICE" = "cartservice" ]; then
+            DOCKER_CONTEXT="./src/$SERVICE/src"
+            DOCKERFILE_PATH="$DOCKER_CONTEXT/Dockerfile"
+          fi
+
+          docker build -t $ECR_REPO:$IMAGE_TAG -f $DOCKERFILE_PATH $DOCKER_CONTEXT
+
+      - name: Push Docker images
+        run: |
+          SERVICE=${{ matrix.service }}
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          IMAGE_TAG=${{ env.SHORT_SHA }}
+          ECR_REPO="${{ env.ECR_REGISTRY }}/${SERVICE}"
+
+          docker push $ECR_REPO:$IMAGE_TAG
+          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:$ENVIRONMENT
+          docker push $ECR_REPO:$ENVIRONMENT
+          
+  scan-ecr-images:
+    name: Scan ECR Images with Snyk
+    runs-on: ubuntu-latest
+    needs:
+      - build-and-push
+      - detect-changes-in-service
+    if: ${{ needs.detect-changes-in-service.outputs.services_changed != '[]' }}
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.detect-changes-in-service.outputs.services_changed) }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image info
+        run: |
+          echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Install Snyk CLI
+        run: |
+          curl -sL https://static.snyk.io/cli/latest/snyk-linux -o snyk
+          chmod +x snyk
+          sudo mv snyk /usr/local/bin/
+
+      - name: Scan Docker image with Snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          SERVICE=${{ matrix.service }}
+          IMAGE_TAG=${{ env.SHORT_SHA }}
+          IMAGE_URI="${{ env.ECR_REGISTRY }}/${SERVICE}:${IMAGE_TAG}"
+
+          snyk container test $IMAGE_URI --json > snyk-report-${SERVICE}.json || true
+          snyk container monitor $IMAGE_URI --project-name=${SERVICE}-${{ github.event.inputs.environment }}
+
+      - name: Upload Snyk Scan Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-scan-${{ matrix.service }}
+          path: snyk-report-${{ matrix.service }}.json
