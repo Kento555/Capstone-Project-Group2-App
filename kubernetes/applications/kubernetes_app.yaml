@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ce-grp-2-app
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
+    targetRevision: main
+    path: kubernetes/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ce-grp-2-capstone
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

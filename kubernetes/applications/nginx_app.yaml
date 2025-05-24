@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-app
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  sources:
+  - repoURL: oci://ghcr.io/nginx/charts
+    chart: nginx-ingress
+    targetRevision: 2.1.0
+    helm:
+      releaseName: ng-inx
+  destination:
+    namespace: ng-inx
+    server: "https://kubernetes.default.svc"
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
