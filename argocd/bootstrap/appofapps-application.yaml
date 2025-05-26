@@ -8,7 +8,7 @@ metadata:
 spec:
   project: appofapps
   source:
-    path: kubernetes/applications
+    path: argocd/applications
     repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
     targetRevision: HEAD
   destination:

@@ -7,7 +7,7 @@ replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/avengers/
+  repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
@@ -62,18 +62,20 @@ ingress:
   className: nginx
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ce-grp-2-capstone.sctp-sandbox.com"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    acme.cert-manager.io/http01-edit-in-place: "true"
+# Uncomment the next 2 lines after DNS record is created in Route 53
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod" 
+    # acme.cert-manager.io/http01-edit-in-place: "true"  
   hosts:
     - host: "ce-grp-2-capstone.sctp-sandbox.com"
       paths:
         - path: /
           pathType: Prefix
 
-  tls:
-    - hosts:
-        - "ce-grp-2-capstone.sctp-sandbox.com"
-      secretName: ce-grp-2-capstone-tls
+# Uncomment this section after DNS record is created in Route 53
+  # tls:
+  #   - hosts:
+  #       - "ce-grp-2-capstone.sctp-sandbox.com"
+  #     secretName: ce-grp-2-capstone-tls
 
 resources:
   {}
@@ -228,10 +230,10 @@ emailService:
 frontend:
   create: true
   name: frontend
-  externalService: true
+  externalService: false
   cymbalBranding: false
   # One of: local, gcp, aws, azure, onprem, alibaba. When not set, defaults to "local" unless running in GKE, otherwise auto-sets to gcp.
-  platform: local
+  platform: aws
   singleSharedSession: false
   virtualService:
     create: false

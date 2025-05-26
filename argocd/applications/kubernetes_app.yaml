@@ -5,13 +5,17 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   source:
     repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
     targetRevision: main
-    path: kubernetes/manifests
+    path: capstone-app
+    helm:
+      releaseName: ce-grp-2-app
+      valueFiles:
+      - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: ce-grp-2-capstone
