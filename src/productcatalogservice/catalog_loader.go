@@ -28,7 +28,78 @@ import (
 	pb "github.com/GoogleCloudPlatform/microservices-demo/src/productcatalogservice/genproto"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 )
+
+type ProductItem struct {
+	ID          string   `dynamodbav:"id"`
+	Name        string   `dynamodbav:"name"`
+	Description string   `dynamodbav:"description"`
+	Picture     string   `dynamodbav:"picture"`
+	Currency    string   `dynamodbav:"price_usd_currency_code"`
+	Units       int64    `dynamodbav:"price_usd_units"`
+	Nanos       int32    `dynamodbav:"price_usd_nanos"`
+	Categories  []string `dynamodbav:"categories"`
+}
+
+func loadCatalogFromDynamoDB(catalog *pb.ListProductsResponse) error {
+	log.Info("loading catalog from DynamoDB...")
+
+	region := os.Getenv("AWS_REGION")
+	if region == "" {
+		region = "us-east-1"
+	}
+
+	cfg, err := config.LoadDefaultConfig(
+	context.TODO(),
+	config.WithRegion(region),
+	)
+	if err != nil {
+		log.Warnf("unable to load SDK config: %v", err)
+		return err
+	}
+
+	dynamoTableName := os.Getenv("DYNAMODB_TABLE_NAME")
+	client := dynamodb.NewFromConfig(cfg)
+	input := &dynamodb.ScanInput{
+		TableName: aws.String(dynamoTableName),
+	}
+
+	output, err := client.Scan(context.TODO(), input)
+	if err != nil {
+		log.Warnf("failed to scan DynamoDB: %v", err)
+		return err
+	}
+
+	for _, item := range output.Items {
+		var p ProductItem
+		if err := attributevalue.UnmarshalMap(item, &p); err != nil {
+			log.Warnf("failed to unmarshal item: %v", err)
+			continue
+		}
+
+		product := &pb.Product{
+			Id:          p.ID,
+			Name:        p.Name,
+			Description: p.Description,
+			Picture:     p.Picture,
+			PriceUsd: &pb.Money{
+				CurrencyCode: p.Currency,
+				Units:        p.Units,
+				Nanos:        p.Nanos,
+			},
+			Categories: p.Categories,
+		}
+		catalog.Products = append(catalog.Products, product)
+	}
+
+	log.Info("successfully loaded catalog from DynamoDB")
+	return nil
+}
 
 func loadCatalog(catalog *pb.ListProductsResponse) error {
 	catalogMutex.Lock()
@@ -38,7 +109,7 @@ func loadCatalog(catalog *pb.ListProductsResponse) error {
 		return loadCatalogFromAlloyDB(catalog)
 	}
 
-	return loadCatalogFromLocalFile(catalog)
+	return loadCatalogFromDynamoDB(catalog)
 }
 
 func loadCatalogFromLocalFile(catalog *pb.ListProductsResponse) error {

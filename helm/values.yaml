@@ -279,6 +279,8 @@ productCatalogService:
   create: true
   name: productcatalogservice
   # Specifies an extra latency to any request on productcatalogservice, by default no extra latency.
+  dynamoDBTableName: "ce-grp-2-product-catalog-dev"
+  region: "us-east-1"
   extraLatency: ""
   resources:
     requests:
