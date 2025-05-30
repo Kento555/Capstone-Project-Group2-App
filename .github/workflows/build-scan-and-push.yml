@@ -155,7 +155,7 @@ jobs:
           SERVICE=${{ matrix.service }}
           ENVIRONMENT=${{ github.event.inputs.environment }}
           IMAGE_TAG=${{ env.SHORT_SHA }}
-          ECR_REPO="${{ env.ECR_REGISTRY }}/${SERVICE}"
+          ECR_REPO="${{ env.ECR_REGISTRY }}/${ENVIRONMENT}/${SERVICE}"
 
           DOCKER_CONTEXT="./src/$SERVICE"
           DOCKERFILE_PATH="$DOCKER_CONTEXT/Dockerfile"
@@ -171,7 +171,7 @@ jobs:
           SERVICE=${{ matrix.service }}
           ENVIRONMENT=${{ github.event.inputs.environment }}
           IMAGE_TAG=${{ env.SHORT_SHA }}
-          ECR_REPO="${{ env.ECR_REGISTRY }}/${SERVICE}"
+          ECR_REPO="${{ env.ECR_REGISTRY }}/${ENVIRONMENT}/${SERVICE}"
 
           docker push $ECR_REPO:$IMAGE_TAG
           docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:$ENVIRONMENT
@@ -214,8 +214,9 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           SERVICE=${{ matrix.service }}
+          ENVIRONMENT=${{ github.event.inputs.environment }}
           IMAGE_TAG=${{ env.SHORT_SHA }}
-          IMAGE_URI="${{ env.ECR_REGISTRY }}/${SERVICE}:${IMAGE_TAG}"
+          IMAGE_URI="${{ env.ECR_REGISTRY }}/${ENVIRONMENT}/${SERVICE}:${IMAGE_TAG}"
 
           snyk container test $IMAGE_URI --json > snyk-report-${SERVICE}.json || true
           snyk container monitor $IMAGE_URI --project-name=${SERVICE}-${{ github.event.inputs.environment }}
