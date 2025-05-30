@@ -20,9 +20,8 @@ metadata:
   name: {{ .Values.productCatalogService.name }}
   namespace: {{.Release.Namespace}}
   {{- if not .Values.serviceAccounts.annotationsOnlyForCartservice }}
-  {{- with .Values.serviceAccounts.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
   {{- end }}
   {{- end }}
 ---
@@ -75,6 +74,10 @@ spec:
         env:
         - name: PORT
           value: "3550"
+        - name: AWS_REGION
+          value: {{ .Values.productCatalogService.region | quote }}
+        - name: DYNAMODB_TABLE_NAME
+          value: {{.Values.productCatalogService.dynamoDBTableName | quote}}
         {{- if .Values.opentelemetryCollector.create }}
         - name: COLLECTOR_SERVICE_ADDR
           value: "{{ .Values.opentelemetryCollector.name }}:4317"

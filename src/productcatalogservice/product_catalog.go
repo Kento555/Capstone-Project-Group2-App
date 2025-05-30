@@ -41,7 +41,13 @@ func (p *productCatalog) Watch(req *healthpb.HealthCheckRequest, ws healthpb.Hea
 func (p *productCatalog) ListProducts(context.Context, *pb.Empty) (*pb.ListProductsResponse, error) {
 	time.Sleep(extraLatency)
 
-	return &pb.ListProductsResponse{Products: p.parseCatalog()}, nil
+    catalog := &pb.ListProductsResponse{}
+    if err := loadCatalog(catalog); err != nil {
+        log.Warnf("failed to load catalog: %v", err)
+        return nil, status.Errorf(codes.Internal, "failed to load catalog: %v", err)
+    }
+
+    return catalog, nil
 }
 
 func (p *productCatalog) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.Product, error) {
