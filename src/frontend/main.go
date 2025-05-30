@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"strings"
 
 	"cloud.google.com/go/profiler"
 	"github.com/gorilla/mux"
@@ -55,6 +56,7 @@ var (
 	}
 
 	baseUrl         = ""
+	CFBaseUrl       = ""
 )
 
 type ctxKeySessionID struct{}
@@ -108,6 +110,7 @@ func main() {
 			propagation.TraceContext{}, propagation.Baggage{}))
 
 	baseUrl = os.Getenv("BASE_URL")
+	CFBaseUrl = os.Getenv("CF_BASE_URL")
 
 	if os.Getenv("ENABLE_TRACING") == "1" {
 		log.Info("Tracing enabled.")
@@ -155,7 +158,11 @@ func main() {
 	r.HandleFunc(baseUrl + "/logout", svc.logoutHandler).Methods(http.MethodGet)
 	r.HandleFunc(baseUrl + "/cart/checkout", svc.placeOrderHandler).Methods(http.MethodPost)
 	r.HandleFunc(baseUrl + "/assistant", svc.assistantHandler).Methods(http.MethodGet)
-	r.PathPrefix(baseUrl + "/static/").Handler(http.StripPrefix(baseUrl + "/static/", http.FileServer(http.Dir("./static/"))))
+	r.PathPrefix(baseUrl + "/static/").HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		filePath := strings.TrimPrefix(req.URL.Path, baseUrl) // Trim only the baseUrl
+		CFURL := CFBaseUrl + filePath
+		http.Redirect(w, req, CFURL, http.StatusFound)
+	})
 	r.HandleFunc(baseUrl + "/robots.txt", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "User-agent: *\nDisallow: /") })
 	r.HandleFunc(baseUrl + "/_healthz", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "ok") })
 	r.HandleFunc(baseUrl + "/product-meta/{ids}", svc.getProductByID).Methods(http.MethodGet)
