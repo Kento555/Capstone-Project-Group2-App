@@ -1,0 +1,39 @@
+name: Install ArgoCD
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  install-argocd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Install kubectl
+        run: |
+          curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.27.4/2023-09-14/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin
+
+      - name: Run Refactored init.sh for ArgoCD in ${{ github.event.inputs.environment }} environment
+        run: |
+          chmod +x ./argocd/bootstrap/init.sh
+          ./argocd/bootstrap/init.sh ${{ github.event.inputs.environment }}
