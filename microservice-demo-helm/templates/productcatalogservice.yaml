@@ -13,20 +13,16 @@
 # limitations under the License.
 
 {{- if .Values.productCatalogService.create }}
-{{- if .Values.serviceAccounts.create }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ .Values.productCatalogService.name }}
-  namespace: {{.Release.Namespace}}
-  {{- if not .Values.serviceAccounts.annotationsOnlyForCartservice }}
-  {{- with .Values.serviceAccounts.annotations }}
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.productCatalogService.serviceAccount.annotations }}
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
-  {{- end }}
+    {{ toYaml . | indent 4 }}
   {{- end }}
 ---
-{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
