@@ -76,7 +76,7 @@ ingress:
     - hosts:
         - "ce-grp-2-capstone.sctp-sandbox.com"
       secretName: ce-grp-2-capstone-tls
-      
+
 resources:
   {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -157,7 +157,6 @@ authorizationPolicies:
 opentelemetryCollector:
   create: true
   name: opentelemetrycollector
-  projectId: "PROJECT_ID"
 
 googleCloudOperations:
   profiler: false
