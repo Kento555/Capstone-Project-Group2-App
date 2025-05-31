@@ -26,19 +26,25 @@ env:
   ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
 
 jobs:
-
   detect-changes-in-service:
     runs-on: ubuntu-latest
     outputs:
       services_changed: ${{ steps.set-services.outputs.services_changed }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout full history
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - id: filter
+      - name: Get previous commit
+        id: prev-commit
+        run: echo "sha=$(git rev-parse HEAD^)" >> $GITHUB_OUTPUT
+      - name: Filter changed paths
+        id: filter
         if: ${{ github.event.inputs.full_build != 'true' }}
         uses: dorny/paths-filter@v3
         with:
+          base: ${{ steps.prev-commit.outputs.sha }}
+          ref: ${{ github.sha }}
           filters: |
             adservice:
               - 'src/adservice/**'
