@@ -31,8 +31,8 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 type ProductItem struct {
@@ -48,6 +48,9 @@ type ProductItem struct {
 
 func loadCatalogFromDynamoDB(catalog *pb.ListProductsResponse) error {
 	log.Info("loading catalog from DynamoDB...")
+
+	// Clear previous catalog entries before loading fresh data
+	catalog.Products = []*pb.Product{}
 
 	region := os.Getenv("AWS_REGION")
 	if region == "" {
