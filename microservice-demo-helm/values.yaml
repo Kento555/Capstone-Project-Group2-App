@@ -279,6 +279,9 @@ productCatalogService:
   name: productcatalogservice
   # Specifies an extra latency to any request on productcatalogservice, by default no extra latency.
   dynamoDBTableName: "ce-grp-2-product-catalog-dev"
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
   region: "us-east-1"
   extraLatency: ""
   resources:
