@@ -1,0 +1,24 @@
+ingress:
+  enabled: true
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "ce-grp-2-capstone-dev.sctp-sandbox.com"
+    # Uncomment the following lines to enable TLS with cert-manager after DNS is set up
+    # cert-manager.io/cluster-issuer: "letsencrypt-dev"
+    # acme.cert-manager.io/http01-edit-in-place: "true"
+  hosts:
+    - host: "ce-grp-2-capstone-dev.sctp-sandbox.com"
+      paths:
+        - path: /
+          pathType: Prefix
+  # Uncomment the following lines to enable TLS with cert-manager after DNS is set up
+  # tls:
+  #   - hosts:
+  #       - "ce-grp-2-capstone-dev.sctp-sandbox.com"
+  #     secretName: ce-grp-2-capstone-dev-tls
+
+clusterIssuer:
+  name: letsencrypt-dev
+  email: kytan2992@outlook.com #replace with your email
+  server: https://acme-v02.api.letsencrypt.org/directory
+  secretName: letsencrypt-dev
+  ingressClass: nginx
