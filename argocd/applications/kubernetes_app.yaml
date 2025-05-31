@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
     targetRevision: main
-    path: capstone-app
+    path: helm
     helm:
       releaseName: ce-grp-2-app
       valueFiles:
