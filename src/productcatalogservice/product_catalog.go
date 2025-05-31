@@ -53,17 +53,21 @@ func (p *productCatalog) ListProducts(context.Context, *pb.Empty) (*pb.ListProdu
 func (p *productCatalog) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.Product, error) {
 	time.Sleep(extraLatency)
 
-	var found *pb.Product
-	for i := 0; i < len(p.parseCatalog()); i++ {
-		if req.Id == p.parseCatalog()[i].Id {
-			found = p.parseCatalog()[i]
-		}
+	product := p.findProductByID(req.Id)
+	if product != nil {
+		return product, nil
 	}
 
-	if found == nil {
-		return nil, status.Errorf(codes.NotFound, "no product with ID %s", req.Id)
+	log.Infof("Product ID %s not found, reloading catalog...", req.Id)
+	reloadCatalog = true
+	defer func() { reloadCatalog = false }()
+
+	product = p.findProductByID(req.Id)
+	if product != nil {
+		return product, nil
 	}
-	return found, nil
+
+	return nil, status.Errorf(codes.NotFound, "no product with ID %s", req.Id)
 }
 
 func (p *productCatalog) SearchProducts(ctx context.Context, req *pb.SearchProductsRequest) (*pb.SearchProductsResponse, error) {
@@ -81,10 +85,20 @@ func (p *productCatalog) SearchProducts(ctx context.Context, req *pb.SearchProdu
 }
 
 func (p *productCatalog) parseCatalog() []*pb.Product {
-	err := loadCatalog(&p.catalog)
-	if err != nil {
-		return []*pb.Product{}
+	if reloadCatalog || len(p.catalog.Products) == 0 {
+		err := loadCatalog(&p.catalog)
+		if err != nil {
+			return []*pb.Product{}
+		}
 	}
-
 	return p.catalog.Products
+}
+
+func (p *productCatalog) findProductByID(id string) *pb.Product {
+	for _, product := range p.parseCatalog() {
+		if product.Id == id {
+			return product
+		}
+	}
+	return nil
 }
