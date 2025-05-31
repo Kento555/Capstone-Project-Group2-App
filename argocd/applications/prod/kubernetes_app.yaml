@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-prod
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  sources:
+  - repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
+    targetRevision: main
+    path: microservice-demo-helm
+    helm:
+      releaseName: app-prod
+      valueFiles:
+      - $values/argocd/values/prod/demo-values.yaml
+  - repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app-capstone
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

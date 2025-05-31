@@ -1,0 +1,14 @@
+## Run using helm to install External-DNS with these values
+## External-DNS is needed to automatically create DNS records in AWS Route53 before installing NGINX Ingress
+
+provider:
+  name: aws
+env:
+  - name: AWS_REGION
+    value: us-east-1
+
+serviceAccount:
+  create: true
+  name: external-dns
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-ExternalDNSRole-prod # Replace with your IAM role ARN

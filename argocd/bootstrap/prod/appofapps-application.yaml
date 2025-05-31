@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: appofapps-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: appofapps
+  source:
+    path: argocd/applications/prod
+    repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
+    targetRevision: HEAD
+  destination:
+    namespace: argocd-prod
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
