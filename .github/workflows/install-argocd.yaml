@@ -1,4 +1,4 @@
-name: Install ArgoCD
+name: Install ArgoCD and Apply Environment Manifests
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         type: choice
         options:
           - dev
-          - staging
+          - uat
           - prod
 
 jobs:
@@ -33,7 +33,8 @@ jobs:
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin
 
-      - name: Run Refactored init.sh for ArgoCD in ${{ github.event.inputs.environment }} environment
+      - name: Install ArgoCD and Apply Manifests for ${{ github.event.inputs.environment }}
         run: |
           chmod +x ./argocd/bootstrap/init.sh
-          ./argocd/bootstrap/init.sh ${{ github.event.inputs.environment }}
+          export GITHUB_ENVIRONMENT=${{ github.event.inputs.environment }}
+          ./argocd/bootstrap/init.sh
