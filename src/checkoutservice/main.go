@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -29,8 +30,13 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/eventbridge"
+
 	pb "github.com/GoogleCloudPlatform/microservices-demo/src/checkoutservice/genproto"
 	money "github.com/GoogleCloudPlatform/microservices-demo/src/checkoutservice/money"
+	eventbridgetypes "github.com/aws/aws-sdk-go-v2/service/eventbridge/types"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
@@ -39,6 +45,13 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
+
+var (
+	eventBusName = "default" // Replace if you're using a custom bus
+	source       = "checkoutservice"
+	detailType   = "OrderPlaced"
+)
+
 
 const (
 	listenPort  = "5050"
@@ -218,6 +231,62 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 	}
 }
 
+func sendOrderToEventBridge(email string,order *pb.OrderResult) error {
+	ctx := context.Background()
+
+	// Load AWS config
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return fmt.Errorf("unable to load AWS config: %w", err)
+	}
+
+	// Create EventBridge client
+	client := eventbridge.NewFromConfig(cfg)
+
+	// Create a combined struct to hold email + order
+	type eventDetail struct {
+		Email string          `json:"email"`
+		Order *pb.OrderResult `json:"order"`
+	}
+
+	detailObj := eventDetail{
+		Email: email,
+		Order: order,
+	}
+
+	// Marshal combined detail as JSON
+	detailBytes, err := json.Marshal(detailObj)
+	if err != nil {
+		return fmt.Errorf("failed to marshal event details: %w", err)
+	}
+
+	// Build the event
+	event := eventbridge.PutEventsInput{
+		Entries: []eventbridgetypes.PutEventsRequestEntry{
+			{
+				EventBusName: aws.String(eventBusName),
+				Source:       aws.String(source),
+				DetailType:   aws.String(detailType),
+				Detail:       aws.String(string(detailBytes)),
+			},
+		},
+	}
+
+	// Send the event
+	resp, err := client.PutEvents(ctx, &event)
+	if err != nil {
+		return fmt.Errorf("failed to put event to EventBridge: %w", err)
+	}
+
+	// Check for failures
+	if resp.FailedEntryCount > 0 {
+		log.Printf("Some entries failed to send to EventBridge")
+	}
+
+	log.Println("Successfully sent order event to EventBridge")
+	return nil
+}
+
 func (cs *checkoutService) Check(ctx context.Context, req *healthpb.HealthCheckRequest) (*healthpb.HealthCheckResponse, error) {
 	return &healthpb.HealthCheckResponse{Status: healthpb.HealthCheckResponse_SERVING}, nil
 }
@@ -274,6 +343,14 @@ func (cs *checkoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderReq
 	} else {
 		log.Infof("order confirmation email sent to %q", req.Email)
 	}
+
+	// Send to EventBridge
+	if err := cs.sendOrderEvent(ctx,req.Email, orderResult); err != nil {
+		log.Warnf("failed to send order event to EventBridge: %+v", err)
+	} else {
+		log.Infof("order event sent to EventBridge successfully")
+	}
+
 	resp := &pb.PlaceOrderResponse{Order: orderResult}
 	return resp, nil
 }
@@ -390,4 +467,8 @@ func (cs *checkoutService) shipOrder(ctx context.Context, address *pb.Address, i
 		return "", fmt.Errorf("shipment failed: %+v", err)
 	}
 	return resp.GetTrackingId(), nil
+}
+
+func (cs *checkoutService) sendOrderEvent(ctx context.Context,email string, order *pb.OrderResult) error {
+	return sendOrderToEventBridge(email,order) 
 }

@@ -22,6 +22,7 @@ metadata:
   annotations:
     {{ toYaml . | indent 4 }}
   {{- end }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment

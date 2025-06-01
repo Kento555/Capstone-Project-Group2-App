@@ -17,6 +17,9 @@ ARG TARGETOS
 ARG TARGETARCH
 WORKDIR /src
 
+# ✅ Install CA certificates in builder stage
+RUN apk add --no-cache ca-certificates
+
 # restore dependencies
 COPY go.mod go.sum ./
 RUN go mod download
@@ -31,6 +34,9 @@ FROM scratch
 
 WORKDIR /src
 COPY --from=builder /checkoutservice /src/checkoutservice
+
+# ✅ Copy CA certificates to allow HTTPS requests to AWS
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Definition of this variable is used by 'skaffold debug' to identify a golang binary.
 # Default behavior - a failure prints a stack trace for the current goroutine.

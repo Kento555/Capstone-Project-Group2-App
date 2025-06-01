@@ -195,6 +195,10 @@ cartService:
 checkoutService:
   create: true
   name: checkoutservice
+  region: "us-east-1"
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
   resources:
     requests:
       cpu: 100m

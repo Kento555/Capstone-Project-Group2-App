@@ -13,18 +13,16 @@
 # limitations under the License.
 
 {{- if .Values.checkoutService.create }}
-{{- if .Values.serviceAccounts.create }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ .Values.checkoutService.name }}
-  namespace: {{.Release.Namespace}}
-  {{- if not .Values.serviceAccounts.annotationsOnlyForCartservice }}
-  {{- with .Values.serviceAccounts.annotations }}
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.checkoutService.serviceAccount.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{ toYaml . | indent 4 }}
   {{- end }}
-  {{- end }}
+{{- end }}
 ---
 {{- end }}
 apiVersion: apps/v1
@@ -81,6 +79,8 @@ spec:
         env:
         - name: PORT
           value: "5050"
+        - name: AWS_REGION
+          value: {{ .Values.checkoutService.region | quote }}
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: "{{ .Values.productCatalogService.name }}:3550"
         - name: SHIPPING_SERVICE_ADDR
