@@ -22,3 +22,22 @@ clusterIssuer:
   server: https://acme-v02.api.letsencrypt.org/directory
   secretName: letsencrypt-dev
   ingressClass: nginx
+
+
+image:
+  repository: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/dev
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: dev
+
+checkoutService:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
+
+productCatalogService:
+  dynamoDBTableName: "ce-grp-2-product-catalog-dev"
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
