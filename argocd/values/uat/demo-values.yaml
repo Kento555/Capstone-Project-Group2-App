@@ -40,9 +40,15 @@ checkoutService:
   serviceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-uat
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
 
 productCatalogService:
   dynamoDBTableName: "ce-grp-2-product-catalog-uat"
   serviceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-uat
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
