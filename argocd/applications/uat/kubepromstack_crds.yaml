@@ -2,13 +2,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kube-prometheus-crds
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
   project: default
   source:
     repoURL: https://github.com/prometheus-community/helm-charts
-    targetRevision: 72.6.4
+    targetRevision: kube-prometheus-stack-72.6.4
     path: charts/kube-prometheus-stack/crds
     directory:
       recurse: true
