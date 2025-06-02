@@ -44,6 +44,5 @@ else
   echo "Bootstrap directory for $ENVIRONMENT not found: $BOOTSTRAP_DIR"
   exit 1
 fi
-fi
 
 echo "ArgoCD setup complete for environment: $ENVIRONMENT"
