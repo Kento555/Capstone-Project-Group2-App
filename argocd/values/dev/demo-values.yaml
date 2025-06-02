@@ -5,6 +5,10 @@ ingress:
     # Uncomment the following lines to enable TLS with cert-manager after DNS is set up
     # cert-manager.io/cluster-issuer: "letsencrypt-dev"
     # acme.cert-manager.io/http01-edit-in-place: "true"
+  ingressClassName: nginx
+  service:
+    name: frontend
+    port: 80
   hosts:
     - host: "ce-grp-2-capstone-dev.sctp-sandbox.com"
       paths:
@@ -17,6 +21,7 @@ ingress:
   #     secretName: ce-grp-2-capstone-dev-tls
 
 clusterIssuer:
+  enabled: true
   name: letsencrypt-dev
   email: kytan2992@outlook.com #replace with your email
   server: https://acme-v02.api.letsencrypt.org/directory
