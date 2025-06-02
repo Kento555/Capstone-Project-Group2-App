@@ -9,9 +9,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: oci://ghcr.io/nginx/charts
+    repoURL: https://kubernetes.github.io/ingress-nginx
     chart: nginx-ingress
-    targetRevision: 2.1.0
+    targetRevision: 4.12.0
     helm:
       releaseName: nginx
   destination:
