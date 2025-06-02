@@ -22,7 +22,6 @@ metadata:
   annotations:
     {{ toYaml . | indent 4 }}
   {{- end }}
-{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,7 +66,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: {{ .Values.image.repository }}/{{ .Values.productCatalogService.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        image: {{ .Values.image.repository }}/{{ .Values.productCatalogService.name }}:99fad41
         ports:
         - containerPort: 3550
         env:

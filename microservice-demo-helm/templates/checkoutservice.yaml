@@ -22,9 +22,7 @@ metadata:
   annotations:
     {{ toYaml . | indent 4 }}
   {{- end }}
-{{- end }}
 ---
-{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -67,7 +65,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: {{ .Values.image.repository }}/{{ .Values.checkoutService.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+        image: {{ .Values.image.repository }}/{{ .Values.checkoutService.name }}:d5493f0
         ports:
         - containerPort: 5050
         readinessProbe:
