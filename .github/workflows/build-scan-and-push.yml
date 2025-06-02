@@ -10,7 +10,7 @@ on:
         type: choice
         options:
           - dev
-          - stage
+          - uat
           - main
       full_build:
         description: 'Build all services'
