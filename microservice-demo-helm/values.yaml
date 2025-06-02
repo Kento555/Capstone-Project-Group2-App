@@ -59,23 +59,6 @@ service:
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: false
-  className: nginx
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: "ce-grp-2-capstone.sctp-sandbox.com"
-# Uncomment the next 2 lines after DNS record is created in Route 53
-    # cert-manager.io/cluster-issuer: "letsencrypt-prod" 
-    # acme.cert-manager.io/http01-edit-in-place: "true"  
-  hosts:
-    - host: "ce-grp-2-capstone.sctp-sandbox.com"
-      paths:
-        - path: /
-          pathType: Prefix
-
-# Uncomment this section after DNS record is created in Route 53
-  tls:
-    - hosts:
-        - "ce-grp-2-capstone.sctp-sandbox.com"
-      secretName: ce-grp-2-capstone-tls
 
 resources:
   {}
@@ -128,11 +111,7 @@ tolerations: []
 affinity: {}
 
 clusterIssuer:
-  name: letsencrypt-prod
-  email: kytan2992@outlook.com #replace with your email
-  server: https://acme-v02.api.letsencrypt.org/directory
-  secretName: letsencrypt-prod
-  ingressClass: nginx
+  enabled: false
 
 serviceAccounts:
   # Specifies whether service accounts should be created.
@@ -233,7 +212,7 @@ frontend:
   create: true
   name: frontend
   cfBaseUrl: "https://d1uluq323o1gpx.cloudfront.net"
-  externalService: true
+  externalService: false
   cymbalBranding: false
   # One of: local, gcp, aws, azure, onprem, alibaba. When not set, defaults to "local" unless running in GKE, otherwise auto-sets to gcp.
   platform: aws

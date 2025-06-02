@@ -17,6 +17,7 @@ ingress:
   #     secretName: uat-capstone-uat-tls
 
 clusterIssuer:
+  enabled: true
   name: letsencrypt-uat
   email: kytan2992@outlook.com #replace with your email
   server: https://acme-v02.api.letsencrypt.org/directory
