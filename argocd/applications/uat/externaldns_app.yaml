@@ -15,7 +15,7 @@ spec:
     helm:
       releaseName: external-dns
       valueFiles:
-      - $values/argocd/values/dev/externaldns-values.yaml
+      - $values/argocd/values/uat/externaldns-values.yaml
   - repoURL: "https://github.com/Kento555/Capstone-Project-Group2-App.git"
     targetRevision: HEAD
     ref: values
