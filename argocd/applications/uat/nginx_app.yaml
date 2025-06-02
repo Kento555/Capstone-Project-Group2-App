@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://kubernetes.github.io/ingress-nginx
-    chart: nginx-ingress
+    chart: ingress-nginx
     targetRevision: 4.12.0
     helm:
       releaseName: nginx
