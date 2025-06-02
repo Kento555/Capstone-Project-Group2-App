@@ -5,7 +5,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   project: default
   source:
@@ -14,6 +14,7 @@ spec:
     targetRevision: 72.6.4
     helm:
       releaseName: kube-prom-stack
+    skipCrds: true
   destination:
     namespace: monitoring
     server: "https://kubernetes.default.svc"
