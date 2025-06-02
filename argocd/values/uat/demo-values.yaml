@@ -3,8 +3,8 @@ ingress:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ce-grp-2-capstone-uat.sctp-sandbox.com"
     # Uncomment the following lines to enable TLS with cert-manager after DNS is set up
-    # cert-manager.io/cluster-issuer: "letsencrypt-uat"
-    # acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-uat"
+    acme.cert-manager.io/http01-edit-in-place: "true"
   ingressClassName: nginx
   service:
     name: frontend
@@ -15,10 +15,10 @@ ingress:
         - path: /
           pathType: Prefix
   # Uncomment the following lines to enable TLS with cert-manager after DNS is set up
-  # tls:
-  #   - hosts:
-  #       - "ce-grp-2-capstone-uat.sctp-sandbox.com"
-  #     secretName: uat-capstone-uat-tls
+  tls:
+    - hosts:
+        - "ce-grp-2-capstone-uat.sctp-sandbox.com"
+      secretName: uat-capstone-uat-tls
 
 clusterIssuer:
   enabled: true
