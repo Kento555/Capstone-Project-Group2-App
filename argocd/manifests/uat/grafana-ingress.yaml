@@ -4,14 +4,14 @@ metadata:
   name: grafana-ingress
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ce-grp-2-grafana-uat.sctp-sandbox.com"
-    # cert-manager.io/cluster-issuer: "letsencrypt-uat"
-    # acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-uat"
+    acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   ingressClassName: nginx
-  # tls:
-  #   - hosts:
-  #       - "ce-grp-2-grafana-uat.sctp-sandbox.com"
-  #     secretName: grafana-tls
+  tls:
+    - hosts:
+        - "ce-grp-2-grafana-uat.sctp-sandbox.com"
+      secretName: grafana-tls
   rules:
     - host: "ce-grp-2-grafana-uat.sctp-sandbox.com"
       http:
