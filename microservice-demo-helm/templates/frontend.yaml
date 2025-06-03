@@ -71,7 +71,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: {{ .Values.image.repository }}/{{ .Values.frontend.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          image: {{ .Values.global.image.repository }}/{{ .Values.frontend.name }}:{{ .Values.frontend.image.tag }}
           ports:
           - containerPort: 8080
           readinessProbe:
