@@ -72,7 +72,7 @@ frontend:
   name: frontend
   cfBaseUrl: "https://d1uluq323o1gpx.cloudfront.net"
   image:
-    tag: uat
+    tag: 'c3b050e'
 
 loadGenerator:
   create: false
