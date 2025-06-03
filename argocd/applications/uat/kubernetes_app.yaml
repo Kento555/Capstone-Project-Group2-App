@@ -6,6 +6,10 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+    argocd-image-updater.argoproj.io/image-list: |
+      frontend=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/frontend
+    argocd-image-updater.argoproj.io/frontend.update-strategy: gitsha
+    argocd-image-updater.argoproj.io/frontend.image-tag: frontend.image.tag
 spec:
   project: default
   sources:
