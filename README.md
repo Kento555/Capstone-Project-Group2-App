@@ -4,12 +4,14 @@
 
 Our Capstone project aims to design, deploy and manage an e-commerce microservice application on an Amazon Elastic Kubernetes Cluster,using proper CI/CD pipelines. It also includes basic observability using Prometheus for monitoring system performance.
 
-Here is the link to our Capstone project: https://ce-grp-2-capstone-uat.sctp-sandbox.com/
+You can find our Capstone project here:
+ 
+https://ce-grp-2-capstone-uat.sctp-sandbox.com/
 
-## The Application
+## Microservice Application
 
 <figure>
-  <img src=".images/google-microservice-frontpage.png" alt="Demo App Frontpage screenshot">
+  <img src="images/google-microservice-frontpage.png" alt="Demo App Frontpage screenshot" style="width: 80%; height: auto;>
 </figure>
 
 We are using [Google's Microservice Demo](https://github.com/GoogleCloudPlatform/microservices-demo) as the application to deploy on our cluster. It is a web-based e-commerce app where users can browse items, add them to the cart, and purchase them. However we have added on our own features to enhance this app.
@@ -34,12 +36,16 @@ The infrastructure is automated using GitHub Actions and Terraform code
 ## Building and Pulling Images from ECR
 
 <figure>
-  <img src="images/ecr_repos.png" alt="ECR repositories screenshot">
+  <img src="images/ecr_repos.png" alt="ECR repositories screenshot" style="width: 80%; height: auto;">
 </figure>
 
 Due to having to modify some of the application's code for certain features to work, we rebuilt the container images and pushed them to our own ECR repositories. Then we changed the application's helm chart to pull from our ECRs for the images instead.
 
-Our Github Action ["build-scan-and-push.yml"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/build-scan-and-push.yml) will automate the building of images from our [sources](https://github.com/Kento555/Capstone-Project-Group2-App/tree/main/src) folder and push them to our ECR repositories. 
+Our Github Action ["Build and Push Microservices to ECR"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/build-scan-and-push.yml) will automate the building of images from our [sources](https://github.com/Kento555/Capstone-Project-Group2-App/tree/main/src) folder and push them to our ECR repositories. 
+
+<figure>
+  <img src="images/ecr_images.png" alt="ECR images screenshot" style="width: 80%; height: auto;">
+</figure>
 
 ## GitOps and ArgoCD (CI/CD Pipeline)
 
@@ -47,7 +53,7 @@ Our Github Action ["build-scan-and-push.yml"](https://github.com/Kento555/Capsto
   <img src="images/argocd_example.png" alt="ArgoCD Directory">
 </figure>
 
-To automate the deployment of ArgoCD and all of our applications, we use our Github Action ["install-argocd.yaml"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/install-argocd.yaml). The action will run the [init.sh](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/argocd/bootstrap/init.sh) file in the bootstrap folder that will run all the application files in the specified environment. In addition, we used a appofapps to watch and automate the creation of applications in another folder.
+To automate the deployment of ArgoCD and all of our applications, we use our Github Action ["Install ArgoCD and Apply Environment Manifests"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/install-argocd.yaml). The action will run the [init.sh](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/argocd/bootstrap/init.sh) file in the bootstrap folder that will run all the application files in the specified environment. In addition, we used a appofapps manifest to watch and automate the creation of applications in another folder.
 
 <figure>
   <img src="images/argocd_app_example.png" alt="ArgoCD Applications">
@@ -88,37 +94,29 @@ To enable our application to have a DNS name with HTTPS enabled and TLS-certifie
     </tr>
 </table>
 
-With these resources, we are able to deploy an Ingress and a Cluster Issuer to create our website link with HTTPS enabled.
+With these resources, we are able to deploy an Ingress and a Cluster Issuer to create our DNS on Route 53 with HTTPS enabled.
 
 ## Product Catalog and Checkout Service
 
 Originally, the application hosted the information of its product catalog locally, and the checkout details could not be saved upon the end of a session. We have modified them to suit our own needs.
 
-<table border="1">
-    <tr>
-        <td align="center">
-          <img src="images/app-productcatalog.png" alt="Product Catalog Page">
-            </a>
-          </td>
-        <td align="center">
-          <img src="images/dynamo-itemcatalog.png" alt="DynamoDB Product Catalog">
-        </td>
-    </tr>
-</table>
+<figure>
+  <img src="images/app-productcatalog.png" alt="Product Catalog Page" style="width: 70%; height: auto;"> 
+</figure>
+
+<figure>
+  <img src="images/dynamo-itemcatalog.png" alt="Product Catalog Page" style="width: 70%; height: auto;"> 
+</figure>
 
 Here, we can control the items we want to display in our store page, using DynamoDB to store data of our products. We also used CloudFront to store and deliver the images of our products to our users.
 
-<table border="1">
-    <tr>
-        <td align="center">
-          <img src="images/app-checkout.png" alt="App Checkout Page">
-            </a>
-          </td>
-        <td align="center">
-          <img src="images/dynamo-orders.png" alt="DynamoDB Orders Checkout">
-        </td>
-    </tr>
-</table>
+<figure>
+  <img src="images/app-checkout.png" alt="Product Catalog Page" style="width: 70%; height: auto;"> 
+</figure>
+
+<figure>
+  <img src="images/dynamo-orders.png" alt="Product Catalog Page" style="width: 70%; height: auto;"> 
+</figure>
 
 We have also modified the app to send the data of any checkout orders into our other DynamoDB here, using EventBridge, SQS Messaging Service and Lambda to do so.
 
@@ -151,6 +149,10 @@ Using [kube prometheus stack](https://github.com/prometheus-community/helm-chart
     </tr>
 </table>
 
+<figure>
+  <img src="images/grafana_metrics.png" alt="Grafana metrics screenshot" style="width: 80%; height: auto;">
+</figure>
+
 Unfortunately, the application's deployments do not expose metrics by default, and thus we have chosen to monitor the state of the nodes instead using Node Exporter.
 
 ## FUTURE ENHANCEMENTS
@@ -165,8 +167,8 @@ Unfortunately, the application's deployments do not expose metrics by default, a
 
 ## MEMBERS
 
-- Wei Shen
-- Norman
-- Ke Yang
-- Nabilah
-- Chris Yeo
+- Kong Wei Shen
+- Norman Fung Zi Jie
+- Tan Ke Yang
+- Nabilah Huda Tang Jun Xia
+- Chris Yeo Hsi Chieh
