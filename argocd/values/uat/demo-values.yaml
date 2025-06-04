@@ -108,3 +108,18 @@ shippingService:
   name: shippingservice
   image:
     tag: uat
+
+alertmanager:
+  config:
+    global:
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'nabilah.tang@gmail.com'
+      smtp_auth_username: '{{ .Values.smtp_auth_username }}'
+      smtp_auth_password: '{{ .Values.smtp_auth_password }}'  # Use Gmail App Password
+    route:
+      receiver: email-alert
+    receivers:
+      - name: email-alert
+        email_configs:
+          - to: 'nabilah.tang@gmail.com'
+            send_resolved: true
