@@ -25,60 +25,71 @@ metadata:
     argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.SHA256}}'
     argocd-image-updater.argoproj.io/write-back-target: "helmvalues: /argocd/values/uat/demo-values.yaml"
     
-    # --- Annotations for adService ---
+    # adService
     argocd-image-updater.argoproj.io/adService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/adService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/adService.helm.image-tag: adService.image.tag
+    argocd-image-updater.argoproj.io/adService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/adservice
 
-    # --- Annotations for cartService ---
+    # cartService
     argocd-image-updater.argoproj.io/cartService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/cartService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/cartService.helm.image-tag: cartService.image.tag
+    argocd-image-updater.argoproj.io/cartService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/cartservice
 
-    # --- Annotations for frontend ---
+    # frontend
     argocd-image-updater.argoproj.io/frontend.update-strategy: newest-build
     argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/frontend.helm.image-tag: frontend.image.tag
+    argocd-image-updater.argoproj.io/frontend.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/frontend
 
-    # --- Annotations for checkoutService ---
-    argocd-image-updater.argoproj.io/checkoutService.update-strategy: newest-build 
-    argocd-image-updater.argoproj.io/checkoutService.allow-tags: regexp:^[0-9a-f]{7}$ 
-    argocd-image-updater.argoproj.io/checkoutService.helm.image-tag: checkoutService.image.tag 
+    # checkoutService
+    argocd-image-updater.argoproj.io/checkoutService.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/checkoutService.allow-tags: regexp:^[0-9a-f]{7}$
+    argocd-image-updater.argoproj.io/checkoutService.helm.image-tag: checkoutService.image.tag
+    argocd-image-updater.argoproj.io/checkoutService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/checkoutservice
 
-    # --- Annotations for currencyService ---
+    # currencyService
     argocd-image-updater.argoproj.io/currencyService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/currencyService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/currencyService.helm.image-tag: currencyService.image.tag
+    argocd-image-updater.argoproj.io/currencyService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/currencyservice
 
-    # --- Annotations for emailService ---
+    # emailService
     argocd-image-updater.argoproj.io/emailService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/emailService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/emailService.helm.image-tag: emailService.image.tag
+    argocd-image-updater.argoproj.io/emailService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/emailservice
 
-    # --- Annotations for loadGenerator ---
+    # loadgenerator
     argocd-image-updater.argoproj.io/loadgenerator.update-strategy: newest-build
     argocd-image-updater.argoproj.io/loadgenerator.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/loadgenerator.helm.image-tag: loadGenerator.image.tag
+    argocd-image-updater.argoproj.io/loadgenerator.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/loadgenerator
 
-    # --- Annotations for paymentService ---
+    # paymentService
     argocd-image-updater.argoproj.io/paymentService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/paymentService.allow-tags: regexp:^[0-9a-f]{7}$
-    argocd-image-updater.argoproj.io/paymentService.helm.image-tag: paymentService.image.tag 
+    argocd-image-updater.argoproj.io/paymentService.helm.image-tag: paymentService.image.tag
+    argocd-image-updater.argoproj.io/paymentService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/paymentservice
 
-    # --- Annotations for productCatalogService ---
+    # productCatalogService
     argocd-image-updater.argoproj.io/productCatalogService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/productCatalogService.allow-tags: regexp:^[0-9a-f]{7}$
-    argocd-image-updater.argoproj.io/productCatalogService.helm.image-tag: productCatalogService.image.tag 
+    argocd-image-updater.argoproj.io/productCatalogService.helm.image-tag: productCatalogService.image.tag
+    argocd-image-updater.argoproj.io/productCatalogService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/productcatalogservice
 
-    # --- Annotations for recommendationService ---
+    # recommendationService
     argocd-image-updater.argoproj.io/recommendationService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/recommendationService.allow-tags: regexp:^[0-9a-f]{7}$
-    argocd-image-updater.argoproj.io/recommendationService.helm.image-tag: recommendationService.image.tag 
+    argocd-image-updater.argoproj.io/recommendationService.helm.image-tag: recommendationService.image.tag
+    argocd-image-updater.argoproj.io/recommendationService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/recommendationservice
 
-    # --- Annotations for shippingService ---
+    # shippingService
     argocd-image-updater.argoproj.io/shippingService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/shippingService.allow-tags: regexp:^[0-9a-f]{7}$
-    argocd-image-updater.argoproj.io/shippingService.helm.image-tag: shippingService.image.tag 
+    argocd-image-updater.argoproj.io/shippingService.helm.image-tag: shippingService.image.tag
+    argocd-image-updater.argoproj.io/shippingService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/shippingservice
 spec:
   project: default
   sources:
