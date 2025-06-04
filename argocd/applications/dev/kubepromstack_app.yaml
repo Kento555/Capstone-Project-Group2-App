@@ -11,14 +11,14 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 72.6.4
+    targetRevision: 72.9.0
     helm:
       valueFiles:
         - kube-prometheus-values.yaml
       releaseName: kube-prom-stack
   destination:
+    server: https://kubernetes.default.svc
     namespace: monitoring
-    server: "https://kubernetes.default.svc"
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

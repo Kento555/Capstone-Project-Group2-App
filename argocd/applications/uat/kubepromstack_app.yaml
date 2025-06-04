@@ -5,24 +5,25 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 72.6.4
+    targetRevision: 72.9.0
     helm:
         valueFiles:
          - kube-prometheus-values.yaml
         releaseName: kube-prom-stack
     skipCrds: true
   destination:
+    server: https://kubernetes.default.svc
     namespace: monitoring
-    server: "https://kubernetes.default.svc"
   syncPolicy:
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
+      - ServerSideApply=true
     automated:
       prune: true
       selfHeal: true

@@ -153,8 +153,6 @@ securityContext:
   enable: true
 
 adService:
-  create: true
-  name: adservice
   resources:
     requests:
       cpu: 200m
@@ -164,8 +162,6 @@ adService:
       memory: 300Mi
 
 cartService:
-  create: true
-  name: cartservice
   resources:
     requests:
       cpu: 200m
@@ -175,12 +171,6 @@ cartService:
       memory: 128Mi
 
 checkoutService:
-  create: true
-  name: checkoutservice
-  region: "us-east-1"
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
   resources:
     requests:
       cpu: 100m
@@ -190,8 +180,6 @@ checkoutService:
       memory: 128Mi
 
 currencyService:
-  create: true
-  name: currencyservice
   resources:
     requests:
       cpu: 100m
@@ -201,8 +189,6 @@ currencyService:
       memory: 128Mi
 
 emailService:
-  create: true
-  name: emailservice
   resources:
     requests:
       cpu: 100m
@@ -212,9 +198,6 @@ emailService:
       memory: 128Mi
 
 frontend:
-  create: true
-  name: frontend
-  cfBaseUrl: "https://d1uluq323o1gpx.cloudfront.net"
   externalService: false
   cymbalBranding: false
   # One of: local, gcp, aws, azure, onprem, alibaba. When not set, defaults to "local" unless running in GKE, otherwise auto-sets to gcp.
@@ -238,8 +221,6 @@ frontend:
       memory: 128Mi
 
 loadGenerator:
-  create: false
-  name: loadgenerator
   checkFrontendInitContainer: true
   resources:
     requests:
@@ -250,8 +231,6 @@ loadGenerator:
       memory: 512Mi
 
 paymentService:
-  create: true
-  name: paymentservice
   resources:
     requests:
       cpu: 100m
@@ -261,14 +240,7 @@ paymentService:
       memory: 128Mi
 
 productCatalogService:
-  create: true
-  name: productcatalogservice
   # Specifies an extra latency to any request on productcatalogservice, by default no extra latency.
-  dynamoDBTableName: "ce-grp-2-product-catalog-dev"
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::255945442255:role/ce-grp-2-irsa-role-dev
-  region: "us-east-1"
   extraLatency: ""
   resources:
     requests:
@@ -279,8 +251,6 @@ productCatalogService:
       memory: 128Mi
 
 recommendationService:
-  create: true
-  name: recommendationservice
   resources:
     requests:
       cpu: 100m
@@ -290,8 +260,6 @@ recommendationService:
       memory: 450Mi
 
 shippingService:
-  create: true
-  name: shippingservice
   resources:
     requests:
       cpu: 100m
