@@ -34,7 +34,7 @@ The infrastructure is automated using GitHub Actions and Terraform code
 ## Building and Pulling Images from ECR
 
 <figure>
-  <img src=".images/ecr_repos.png" alt="ECR repositories screenshot">
+  <img src="images/ecr_repos.png" alt="ECR repositories screenshot">
 </figure>
 
 Due to having to modify some of the application's code for certain features to work, we rebuilt the container images and pushed them to our own ECR repositories. Then we changed the application's helm chart to pull from our ECRs for the images instead.
@@ -44,13 +44,13 @@ Our Github Action ["build-scan-and-push.yml"](https://github.com/Kento555/Capsto
 ## GitOps and ArgoCD (CI/CD Pipeline)
 
 <figure>
-  <img src=".images/argocd_example.png" alt="ArgoCD Directory">
+  <img src="images/argocd_example.png" alt="ArgoCD Directory">
 </figure>
 
 To automate the deployment of ArgoCD and all of our applications, we use our Github Action ["install-argocd.yaml"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/install-argocd.yaml). The action will run the [init.sh](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/argocd/bootstrap/init.sh) file in the bootstrap folder that will run all the application files in the specified environment. In addition, we used a appofapps to watch and automate the creation of applications in another folder.
 
 <figure>
-  <img src=".images/argocd_app_example.png" alt="ArgoCD Applications">
+  <img src="images/argocd_app_example.png" alt="ArgoCD Applications">
 </figure>
 
 ## DNS & HTTPS
@@ -97,11 +97,11 @@ Originally, the application hosted the information of its product catalog locall
 <table border="1">
     <tr>
         <td align="center">
-          <img src=".images/app-productcatalog.png" alt="Product Catalog Page">
+          <img src="images/app-productcatalog.png" alt="Product Catalog Page">
             </a>
           </td>
         <td align="center">
-          <img src=".images/dyanmo-itemcatalogue.png" alt="DynamoDB Product Catalog">
+          <img src="images/dyanmo-itemcatalogue.png" alt="DynamoDB Product Catalog">
         </td>
     </tr>
 </table>
@@ -111,11 +111,11 @@ Here, we can control the items we want to display in our store page, using Dynam
 <table border="1">
     <tr>
         <td align="center">
-          <img src=".images/app-checkout.png" alt="App Checkout Page">
+          <img src="images/app-checkout.png" alt="App Checkout Page">
             </a>
           </td>
         <td align="center">
-          <img src=".images/dyanmo-orders.png" alt="DynamoDB Orders Checkout">
+          <img src="images/dyanmo-orders.png" alt="DynamoDB Orders Checkout">
         </td>
     </tr>
 </table>
