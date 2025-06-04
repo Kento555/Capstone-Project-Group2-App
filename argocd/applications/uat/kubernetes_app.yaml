@@ -7,11 +7,18 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
     argocd-image-updater.argoproj.io/image-list: |
-      frontend=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/frontend
+      frontend=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/frontend,
+      checkoutservice=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/checkoutservice
+
+    # --- Annotations for frontend ---
     argocd-image-updater.argoproj.io/frontend.update-strategy: newest-build
     argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/frontend.helm.image-tag: frontend.image.tag
-    argocd-image-updater.argoproj.io/frontend.helm.image-name: frontend.image.name
+
+    # --- Annotations for checkoutservice ---
+    argocd-image-updater.argoproj.io/checkoutservice.update-strategy: newest-build 
+    argocd-image-updater.argoproj.io/checkoutservice.allow-tags: regexp:^[0-9a-f]{7}$ 
+    argocd-image-updater.argoproj.io/checkoutservice.helm.image-tag: checkoutService.image.tag 
 spec:
   project: default
   sources:
