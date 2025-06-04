@@ -6,14 +6,6 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "3"
-
-    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
-    argocd-image-updater.argoproj.io/git-repository: https://github.com/Kento555/Capstone-Project-Group2-App.git
-    argocd-image-updater.argoproj.io/git-branch: main:image-updater{{range .Images}}-{{.Name}}-{{.NewTag}}{{end}}
-    argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.Image.Alias}} to {{.Image.Tag}}'
-    argocd-image-updater.argoproj.io/write-back-target: "helmvalues: /argocd/values/uat/demo-values.yaml"
-
-
     argocd-image-updater.argoproj.io/image-list: |
       adservice=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/adservice, 
       cartservice=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/cartservice,
@@ -26,6 +18,12 @@ metadata:
       productcatalogservice=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/productcatalogservice, 
       recommendationservice=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/recommendationservice, 
       shippingservice=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/shippingservice 
+        argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
+        
+    argocd-image-updater.argoproj.io/git-repository: https://github.com/Kento555/Capstone-Project-Group2-App.git
+    argocd-image-updater.argoproj.io/git-branch: main:image-updater-{{.Name}}-{{.NewTag}}{{end}}
+    argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.Image.Alias}} to {{.Image.Tag}}'
+    argocd-image-updater.argoproj.io/write-back-target: "helmvalues: /argocd/values/uat/demo-values.yaml"
     
     # --- Annotations for adService ---
     argocd-image-updater.argoproj.io/adservice.update-strategy: newest-build
