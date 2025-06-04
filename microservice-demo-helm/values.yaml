@@ -289,3 +289,20 @@ cartDatabase:
 shoppingAssistantService:
   create: false
   name: shoppingassistantservice
+
+#base values for alertmanager
+alertmanager:
+  enabled: true
+
+  alertmanagerSpec:
+    replicas: 1
+    logLevel: info
+    logFormat: logfmt
+    retention: 120h
+    resources:
+      requests:
+        memory: "200Mi"
+        cpu: "100m"
+      limits:
+        memory: "400Mi"
+        cpu: "200m"
