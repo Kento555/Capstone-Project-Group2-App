@@ -21,8 +21,8 @@ metadata:
         
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
     argocd-image-updater.argoproj.io/git-repository: https://github.com/Kento555/Capstone-Project-Group2-App.git
-    argocd-image-updater.argoproj.io/git-branch: main:image-updater-{{.Name}}-{{.NewTag}}
-    argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.Image.Alias}} to {{.Image.Tag}}'
+    argocd-image-updater.argoproj.io/git-branch: main:image-updater-{{.SHA256}}
+    argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.SHA256}}'
     argocd-image-updater.argoproj.io/write-back-target: "helmvalues: /argocd/values/uat/demo-values.yaml"
     
     # --- Annotations for adService ---
