@@ -2,16 +2,16 @@
 
 ## Overview
 
-Our Capstone project aims to design, deploy and manage an e-commerce microservice application on an Amazon Elastic Kubernetes Cluster,using proper CI/CD pipelines. It also includes basic observability using Prometheus for monitoring system performance.
+Our Capstone project aims to design, deploy and manage an e-commerce microservice application on an Amazon Elastic Kubernetes Cluster, using proper CI/CD pipelines. It also includes basic observability using Prometheus for monitoring system performance.
 
 You can find our Capstone project here:
- 
+
 https://ce-grp-2-capstone-uat.sctp-sandbox.com/
 
 ## Microservice Application
 
 <figure>
-  <img src="images/google-microservice-frontpage.png" alt="Demo App Frontpage screenshot" style="width: 80%; height: auto;>
+  <img src="images/google-microservice-frontpage.png" alt="Demo App Frontpage screenshot">
 </figure>
 
 We are using [Google's Microservice Demo](https://github.com/GoogleCloudPlatform/microservices-demo) as the application to deploy on our cluster. It is a web-based e-commerce app where users can browse items, add them to the cart, and purchase them. However we have added on our own features to enhance this app.
@@ -31,7 +31,7 @@ It will create the necessary resources for us to deploy our application:
   - DynamoDB databases, Lambda function, Eventbridge for storing data
   - ECR repositories for storing container images
 
-The infrastructure is automated using GitHub Actions and Terraform code
+The infrastructure is automated using GitHub Actions and Terraform code.
 
 ## Building and Pulling Images from ECR
 
