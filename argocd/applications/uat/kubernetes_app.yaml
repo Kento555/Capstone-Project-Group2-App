@@ -19,77 +19,67 @@ metadata:
       recommendationService=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/recommendationservice, 
       shippingService=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/shippingservice 
         
-    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
-    argocd-image-updater.argoproj.io/git-repository: https://github.com/Kento555/Capstone-Project-Group2-App.git
-    argocd-image-updater.argoproj.io/git-branch: main:image-updater-{{.SHA256}}
-    argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.SHA256}}'
-    argocd-image-updater.argoproj.io/write-back-target: "helmvalues: /argocd/values/uat/demo-values.yaml"
+    # write-back-method git needs more experiments
+    # argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
+    # argocd-image-updater.argoproj.io/git-repository: https://github.com/Kento555/Capstone-Project-Group2-App.git
+    # argocd-image-updater.argoproj.io/git-branch: main:image-updater-{{.SHA256}}
+    # argocd-image-updater.argoproj.io/git-commit-message: 'feat: Automated image update for {{.SHA256}}'
+    # argocd-image-updater.argoproj.io/write-back-target: "helmvalues: /argocd/values/uat/demo-values.yaml"
     
-    # adService
+    # --- Annotations for adService ---
     argocd-image-updater.argoproj.io/adService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/adService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/adService.helm.image-tag: adService.image.tag
-    argocd-image-updater.argoproj.io/adService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/adservice
 
-    # cartService
+    # --- Annotations for cartService ---
     argocd-image-updater.argoproj.io/cartService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/cartService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/cartService.helm.image-tag: cartService.image.tag
-    argocd-image-updater.argoproj.io/cartService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/cartservice
 
-    # frontend
+    # --- Annotations for frontend ---
     argocd-image-updater.argoproj.io/frontend.update-strategy: newest-build
     argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/frontend.helm.image-tag: frontend.image.tag
-    argocd-image-updater.argoproj.io/frontend.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/frontend
 
-    # checkoutService
+    # --- Annotations for checkoutService ---
     argocd-image-updater.argoproj.io/checkoutService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/checkoutService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/checkoutService.helm.image-tag: checkoutService.image.tag
-    argocd-image-updater.argoproj.io/checkoutService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/checkoutservice
 
-    # currencyService
+    # --- Annotations for currencyService ---
     argocd-image-updater.argoproj.io/currencyService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/currencyService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/currencyService.helm.image-tag: currencyService.image.tag
-    argocd-image-updater.argoproj.io/currencyService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/currencyservice
 
-    # emailService
+    # --- Annotations for emailService ---
     argocd-image-updater.argoproj.io/emailService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/emailService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/emailService.helm.image-tag: emailService.image.tag
-    argocd-image-updater.argoproj.io/emailService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/emailservice
 
-    # loadgenerator
+    # --- Annotations for loadGenerator ---
     argocd-image-updater.argoproj.io/loadgenerator.update-strategy: newest-build
     argocd-image-updater.argoproj.io/loadgenerator.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/loadgenerator.helm.image-tag: loadGenerator.image.tag
-    argocd-image-updater.argoproj.io/loadgenerator.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/loadgenerator
 
-    # paymentService
+    # --- Annotations for paymentService ---
     argocd-image-updater.argoproj.io/paymentService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/paymentService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/paymentService.helm.image-tag: paymentService.image.tag
-    argocd-image-updater.argoproj.io/paymentService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/paymentservice
 
-    # productCatalogService
+    # --- Annotations for productCatalogService ---
     argocd-image-updater.argoproj.io/productCatalogService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/productCatalogService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/productCatalogService.helm.image-tag: productCatalogService.image.tag
-    argocd-image-updater.argoproj.io/productCatalogService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/productcatalogservice
 
-    # recommendationService
+    # --- Annotations for recommendationService ---
     argocd-image-updater.argoproj.io/recommendationService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/recommendationService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/recommendationService.helm.image-tag: recommendationService.image.tag
-    argocd-image-updater.argoproj.io/recommendationService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/recommendationservice
 
-    # shippingService
+    # --- Annotations for shippingService ---
     argocd-image-updater.argoproj.io/shippingService.update-strategy: newest-build
     argocd-image-updater.argoproj.io/shippingService.allow-tags: regexp:^[0-9a-f]{7}$
     argocd-image-updater.argoproj.io/shippingService.helm.image-tag: shippingService.image.tag
-    argocd-image-updater.argoproj.io/shippingService.image-name: 255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/shippingservice
 spec:
   project: default
   sources:
