@@ -101,7 +101,7 @@ Originally, the application hosted the information of its product catalog locall
             </a>
           </td>
         <td align="center">
-          <img src="images/dyanmo-itemcatalogue.png" alt="DynamoDB Product Catalog">
+          <img src="images/dynamo-itemcatalog.png" alt="DynamoDB Product Catalog">
         </td>
     </tr>
 </table>
@@ -115,7 +115,7 @@ Here, we can control the items we want to display in our store page, using Dynam
             </a>
           </td>
         <td align="center">
-          <img src="images/dyanmo-orders.png" alt="DynamoDB Orders Checkout">
+          <img src="images/dynamo-orders.png" alt="DynamoDB Orders Checkout">
         </td>
     </tr>
 </table>
