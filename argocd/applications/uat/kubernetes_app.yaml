@@ -10,7 +10,8 @@ metadata:
       frontend=255945442255.dkr.ecr.us-east-1.amazonaws.com/ce-grp-2/uat/frontend
     argocd-image-updater.argoproj.io/frontend.update-strategy: newest-build
     argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^[0-9a-f]{7}$
-    argocd-image-updater.argoproj.io/frontend.image-tag: frontend.image.tag
+    argocd-image-updater.argoproj.io/frontend.helm.image-tag: frontend.image.tag
+    argocd-image-updater.argoproj.io/frontend.helm.image-name: frontend.image.name
 spec:
   project: default
   sources:
