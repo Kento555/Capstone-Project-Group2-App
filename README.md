@@ -39,7 +39,7 @@ The infrastructure is automated using GitHub Actions and Terraform code.
   <img src="images/ecr_repos.png" alt="ECR repositories screenshot" style="width: 80%; height: auto;">
 </figure>
 
-Due to having to modify some of the application's code for certain features to work, we rebuilt the container images and pushed them to our own ECR repositories. Then we changed the application's helm chart to pull from our ECRs for the images instead.
+Due to modifying some of the application's code for certain features to work, we rebuilt the application's container images and pushed them to our own ECR repositories. We then changed the application's helm chart to pull from our ECRs for the images instead.
 
 Our Github Action ["Build and Push Microservices to ECR"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/build-scan-and-push.yml) will automate the building of images from our [sources](https://github.com/Kento555/Capstone-Project-Group2-App/tree/main/src) folder and push them to our ECR repositories. 
 
@@ -53,10 +53,14 @@ Our Github Action ["Build and Push Microservices to ECR"](https://github.com/Ken
   <img src="images/argocd_example.png" alt="ArgoCD Directory">
 </figure>
 
-To automate the deployment of ArgoCD and all of our applications, we use our Github Action ["Install ArgoCD and Apply Environment Manifests"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/install-argocd.yaml). The action will run the [init.sh](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/argocd/bootstrap/init.sh) file in the bootstrap folder that will run all the application files in the specified environment. In addition, we used a appofapps manifest to watch and automate the creation of applications in another folder.
+To automate the deployment of ArgoCD and all of our applications, we use our Github Action ["Install ArgoCD and Apply Environment Manifests"](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/.github/workflows/install-argocd.yaml). The action will run the [init.sh](https://github.com/Kento555/Capstone-Project-Group2-App/blob/main/argocd/bootstrap/init.sh) file in the bootstrap folder that will run all the application files in the specified environment. In addition, we used a Appofapps manifest to watch and automate the creation of applications in another folder.
 
 <figure>
   <img src="images/argocd_app_example.png" alt="ArgoCD Applications">
+</figure>
+
+<figure>
+  <img src="images/argocd_ui.png" alt="ArgoCD UI" style="width: 80%; height: auto;">
 </figure>
 
 ## DNS & HTTPS
@@ -94,7 +98,7 @@ To enable our application to have a DNS name with HTTPS enabled and TLS-certifie
     </tr>
 </table>
 
-With these resources, we are able to deploy an Ingress and a Cluster Issuer to create our DNS on Route 53 with HTTPS enabled.
+With these resources, we are able to deploy an Ingress and a Cluster Issuer to create our DNS on Route 53 with HTTPS enabled, getting TLS certificate from [Let's Encrypt](https://letsencrypt.org/)
 
 ## Product Catalog and Checkout Service
 
@@ -153,7 +157,7 @@ Using [kube prometheus stack](https://github.com/prometheus-community/helm-chart
   <img src="images/grafana_metrics.png" alt="Grafana metrics screenshot" style="width: 80%; height: auto;">
 </figure>
 
-Unfortunately, the application's deployments do not expose metrics by default, and thus we have chosen to monitor the state of the nodes instead using Node Exporter.
+Unfortunately, the application's deployments do not expose metrics by default, and thus we have chosen to monitor the state metrics of the nodes instead by using Node Exporter.
 
 ## FUTURE ENHANCEMENTS
 
