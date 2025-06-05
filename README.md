@@ -18,7 +18,7 @@ We are using [Google's Microservice Demo](https://github.com/GoogleCloudPlatform
 
 ## Architecture Diagram
 
-"![alt text](Avengers.drawio.png)"
+"![alt text](images/Avengers.drawio.png)"
 
 ## Infrastructure
 
