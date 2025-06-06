@@ -3,4 +3,4 @@
 Run the following command to restore dependencies to `vendor/` directory:
 
     dep ensure --vendor-only
-    Trigger Build
+    Trigger Build for Presentation
